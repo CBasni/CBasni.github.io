@@ -1,4 +1,4 @@
-let spelunky1, spelunk2, spelunky3;
+let spelunky1, spelunky2, spelunky3;
 let characters = [];
 
 function preload() {
