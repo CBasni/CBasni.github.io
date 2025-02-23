@@ -1,45 +1,60 @@
-let spelunky3;
-let character;
+let spelunky1, spelunk2, spelunky3;
+let characters = [];
 
 function preload() {
-  spelunky3 = loadImage("media/spelunky3.png");
+  spelunky1 = loadImage("media/spelunky1.png"); // Sprite sheet for character 1
+  spelunky2 = loadImage("media/spelunky2.png"); // Sprite sheet for character 2
+  spelunky3 = loadImage("media/spelunky3.png"); // Sprite sheet for character 3
 }
 
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(600, 400);
   imageMode(CENTER);
 
-  character = new Character(width / 2, height / 2);
-  
-  // Define animations using correct sprite sheet rows/columns
-  character.addAnimation("down", new SpriteAnimation(spelunky3, 6, 5, 6));
-  character.addAnimation("up", new SpriteAnimation(spelunky3, 0, 5, 6));
-  character.addAnimation("right", new SpriteAnimation(spelunky3, 0, 0, 6));
-  character.addAnimation("left", new SpriteAnimation(spelunky3, 0, 0, 6, true)); 
-  character.addAnimation("stand_right", new SpriteAnimation(spelunky3, 0, 0, 1)); 
-  character.addAnimation("stand_left", new SpriteAnimation(spelunky3, 0, 0, 1, true)); 
+  // Create three characters with different sprite sheets
+  let character1 = new Character(width / 4, height / 2, spelunky1);
+  let character2 = new Character(width / 2, height / 2, spelunky2);
+  let character3 = new Character((3 * width) / 4, height / 2, spelunky3);
 
-  character.currentAnimation = "stand_right"; // Start standing right
+  characters.push(character1, character2, character3);
+
+  // Define animations for each character
+  characters.forEach(character => {
+    character.addAnimation("down", new SpriteAnimation(character.spriteSheet, 6, 5, 6));
+    character.addAnimation("up", new SpriteAnimation(character.spriteSheet, 0, 5, 6));
+    character.addAnimation("right", new SpriteAnimation(character.spriteSheet, 0, 0, 6));
+    character.addAnimation("left", new SpriteAnimation(character.spriteSheet, 0, 0, 6, true));
+    character.addAnimation("stand_right", new SpriteAnimation(character.spriteSheet, 0, 0, 1));
+    character.addAnimation("stand_left", new SpriteAnimation(character.spriteSheet, 0, 0, 1, true));
+    character.currentAnimation = "stand_right"; // Start standing right
+  });
 }
 
 function draw() {
   background(220);
-  character.draw();
+
+  // Update and draw each character
+  characters.forEach(character => {
+    character.draw();
+  });
 }
 
 function keyPressed() {
-  character.keyPressed();
+  // Move all characters when arrow keys are pressed
+  characters.forEach(character => character.keyPressed());
 }
 
 function keyReleased() {
-  character.keyReleased();
+  // Reset animation when keys are released
+  characters.forEach(character => character.keyReleased());
 }
 
 // Character Class
 class Character {
-  constructor(x, y) {
+  constructor(x, y, spriteSheet) {
     this.x = x;
     this.y = y;
+    this.spriteSheet = spriteSheet;
     this.currentAnimation = "stand_right";
     this.animations = {};
     this.lastDirection = "right"; // Tracks last movement direction
@@ -57,7 +72,7 @@ class Character {
         case "up":
           this.y -= 2;
           break;
-        case "down": 
+        case "down":
           this.y += 2;
           break;
         case "right":
@@ -93,7 +108,7 @@ class Character {
         break;
     }
   }
-  
+
   keyReleased() {
     // Return to standing animation, facing the last movement direction
     if (this.lastDirection === "right") {
