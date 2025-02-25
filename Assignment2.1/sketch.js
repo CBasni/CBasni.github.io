@@ -3,7 +3,7 @@ let wolfReverb, tigerReverb, catReverb, seagullsReverb;
 let wolfSlider, tigerSlider, catSlider; seagullsSlider;
 
 function preload() {
-  samples = new Tone.Players({
+  samples = new Tone.Player({
     wolf: "media/wolf.mp3",
     tiger: "media/tiger.mp3",
     cat: "media/cat.mp3",
